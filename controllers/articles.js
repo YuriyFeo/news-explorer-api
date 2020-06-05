@@ -41,31 +41,6 @@ module.exports.createArticle = (req, res, next) => {
     .catch(next);
 };
 
-// Удаляем статью
-/* module.exports.deleteArticle = (req, res, next) => {
-    const { articleId } = req.params;
-    const ownerId = req.user._id;
-    Article.findById(articleId).select('+owner')
-        .then((article) => {
-            if (!article) {
-                throw new Error404('Что-то пошло не так');
-            }
-            if (article.owner.toString() !== ownerId) {
-                throw new Error401('Что-то пошло не так');
-            }
-            Article.findByIdAndRemove(articleId)
-                .then((article) => {
-                    if (!article) {
-                        throw new Error404('Что-то пошло не так');
-                    }
-                    res.send(article);
-                })
-                .catch(next);
-        })
-        .catch(next);
-};
-*/
-
 //  удаляет статью по идентификатору
 module.exports.deleteArticle = (req, res, next) => {
   const { articleId } = req.params;

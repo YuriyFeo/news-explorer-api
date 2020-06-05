@@ -3,11 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
 const { PORT, DATABASE_URL } = require('./config');
 const users = require('./routes/users.js');
 const articles = require('./routes/article.js');
 const { createUser, login } = require('./controllers/users');
+const limiter = require('./middlewares/limit');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const Error404 = require('./errors/err404');
@@ -27,14 +29,11 @@ mongoose.connect(DATABASE_URL, {
 // подключаем мидлвары, роуты
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(helmet.xssFilter());
+app.use(helmet.frameguard());
+//  apply to all requests
+app.use(limiter);
 app.use(requestLogger);
-
-/* app.get('/crash-test', () => {
-    setTimeout(() => {
-        throw new Error('Сервер сейчас упадёт');
-    }, 0);
-}); */
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
