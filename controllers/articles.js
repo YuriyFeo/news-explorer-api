@@ -57,7 +57,7 @@ module.exports.deleteArticle = (req, res, next) => {
       if (!isMatch) {
         throw new Error403('Невозможно удалить чужую карточку');
       }
-      return Article.deleteOne(articleId); // Article.findByIdAndRemove(articleId);
+      return Article.findByIdAndRemove(articleId);
     })
     .then((articleRemove) => {
       if (!articleRemove) {
